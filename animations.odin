@@ -1,11 +1,10 @@
 package main
 
-import "core:fmt"
 import "core:strings"
 import rl "vendor:raylib"
 
 
-// i hope we remember what everything is lmao
+// all data needed for animating a sprite sheet for mostly any entity
 animated_sprite_sheet :: struct {
 	texture:        rl.Texture2D,
 	frame_rec:      rl.Rectangle,
@@ -18,6 +17,7 @@ animated_sprite_sheet :: struct {
 	frame_speed:    f32,
 }
 
+// loads texture and sets all data needed for animation
 load_animated_sprite :: proc(
 	texture: string,
 	num_animations, max_frames: i32,
@@ -38,27 +38,27 @@ load_animated_sprite :: proc(
 	return a
 }
 
-update_animate_sprite :: proc(s: ^animated_sprite_sheet, dt: f32) {
+// updates frames to animate the sprite
+animate_sprite :: proc(s: ^animated_sprite_sheet, dt: f32) {
 	s.frame_timer += dt
-
 	if s.frame_timer >= 1 / s.frame_speed {
 		s.frame_timer = 0
 		s.curr_frame += 1
-
 		if s.curr_frame > s.num_frames {
 			s.curr_frame = 0
 		}
-
 		s.frame_rec.x = f32(s.curr_frame) * s.frame_rec.width
 	}
 }
 
+// changes the sprite frame_rec up or down, to change the animation
 update_animation :: proc(s: ^animated_sprite_sheet, a: i32) {
 	s.cur_animation = a
 	s.frame_rec.y = f32(s.cur_animation) * s.frame_rec.height
 }
 
 
-draw_animated_sprite :: proc(s: ^animated_sprite_sheet) {
-	rl.DrawTextureRec(s.texture, s.frame_rec, {100, 100}, rl.WHITE)
+// draws the animation, should work for any entity using the animated_sprite_sheet
+draw_animated_sprite :: proc(s: ^animated_sprite_sheet, pos: rl.Vector2) {
+	rl.DrawTextureRec(s.texture, s.frame_rec, pos, rl.WHITE)
 }
