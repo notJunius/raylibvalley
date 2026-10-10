@@ -1,0 +1,5 @@
+package main
+
+SCREEN_WIDTH: i32 = 1280
+SCREEN_HEIGHT: i32 = 720
+TILE_SIZE: i32 = 64
